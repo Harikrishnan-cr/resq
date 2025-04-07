@@ -4,10 +4,19 @@ import 'package:resq/services/controllers/user_controller.dart';
 import 'package:resq/services/location_serice.dart';
 import 'package:resq/utils/utils.dart';
 
-class EmergencyPage extends StatelessWidget {
+class EmergencyPage extends StatefulWidget {
+
+  const EmergencyPage({super.key}); 
+  @override
+  State<EmergencyPage> createState() => _EmergencyPageState();
+}
+
+class _EmergencyPageState extends State<EmergencyPage> {
+
+  bool isLoading= false;
   final UserDetailsController controller = Get.find<UserDetailsController>();
 
-  EmergencyPage({super.key}); // Function to show dialog
+ // Function to show dialog
   void showSafetyDialog(
       BuildContext context, String disaster, String precautions) {
     Get.defaultDialog(
@@ -132,10 +141,27 @@ class EmergencyPage extends StatelessWidget {
             SizedBox(height: 20),
             InkWell(
               onTap: () async{
-                final location = await getCurrentLatLong();
-                controller.saveUserDetails(latlong: location);
+
+              try {
+                setState(() {
+                  isLoading = true;
+                });
+                  final location = await getCurrentLatLong();
+               await controller.saveUserDetails(latlong: location);
+                 setState(() {
+                  isLoading = false;
+                });
+              } catch (e) {
+                  setState(() {
+                  isLoading = false;
+                });
+              }
               },
-              child: Container(
+              child: isLoading ? SizedBox(
+                      width: res.width(0.4),
+                height: res.width(0.12),
+                child: Center(child: CircularProgressIndicator()),
+              ) : Container(
                 width: res.width(0.4),
                 height: res.width(0.12),
                 decoration: BoxDecoration(
