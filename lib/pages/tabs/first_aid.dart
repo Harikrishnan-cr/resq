@@ -66,9 +66,41 @@ class FirstAidController extends GetxController {
   }
 }
 
-class FirstAidPage extends StatelessWidget {
-  final FirstAidController controller = Get.put(FirstAidController());
 
+
+class FirstAidListClass {
+  
+  final int id;
+  final String img;
+  final String name;
+
+FirstAidListClass({required this.id,required this.img,required this.name});
+
+
+}
+
+List<FirstAidListClass> firstAidList = [
+
+  FirstAidListClass(id: 1, img: 'assets/water.jpg', name: 'Water'),
+  FirstAidListClass(id: 2, img: 'assets/rope.jpg', name: 'Rope'),
+  FirstAidListClass(id: 3, img: 'assets/food.jpg', name: 'Food'),
+  FirstAidListClass(id: 4, img: 'assets/ambulace.jpg', name: 'Ambulance'),
+  FirstAidListClass(id: 5, img: 'assets/firstaid.jpg', name: 'first aid box'),
+  FirstAidListClass(id: 6, img: 'assets/knife.jpg', name: 'Knife'),
+];
+
+class FirstAidPage extends StatefulWidget {
+  const FirstAidPage({super.key});
+
+  @override
+  State<FirstAidPage> createState() => _FirstAidPageState();
+}
+
+class _FirstAidPageState extends State<FirstAidPage> {
+
+
+
+  int isSlectedId = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,38 +112,44 @@ class FirstAidPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Obx(
-        () => GridView.builder(
+      body:  GridView.builder(
           padding: EdgeInsets.all(10),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 0.9,
           ),
-          itemCount: controller.items.length,
+          itemCount:firstAidList.length,
           itemBuilder: (context, index) {
-            final item = controller.items[index];
-            final isSelected =
-                controller.selectedItems.contains(item['id'].toString());
+            final item = firstAidList[index];
+           
 
             return GestureDetector(
               onTap: () {
-                print("Tapped on item: ${item['name']} (ID: ${item['id']})");
-                controller.toggleSelection(item['id'].toString());
+               setState(() {
+
+                if(isSlectedId == item.id){
+                  isSlectedId = 0;
+                  return;
+                }
+                 isSlectedId = item.id;
+
+
+               });
               },
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                   side: BorderSide(
-                      color: isSelected ? Colors.green : Colors.grey),
+                      color: item.id == isSlectedId ? Colors.green : Colors.grey),
                 ),
                 child: Column(
                   children: [
                     Expanded(
-                      child: Image.network(
-                        item['image_url'],
+                      child: Image.asset(
+                        item.img,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
-                          print("Error loading image: ${item['image_url']}");
+                         
                           return Icon(Icons.error, color: Colors.red);
                         },
                       ),
@@ -119,7 +157,7 @@ class FirstAidPage extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        item['name'],
+                        item.name,
                         style: AppTextStyles.bodyLargeBlack,
                       ),
                     ),
@@ -128,12 +166,12 @@ class FirstAidPage extends StatelessWidget {
               ),
             );
           },
-        ),
+        
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print("Floating action button pressed, saving selection...");
-          controller.saveSelection();
+      
+        
         },
         child: Icon(Icons.check),
       ),

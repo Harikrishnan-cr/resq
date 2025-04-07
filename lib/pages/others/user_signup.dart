@@ -26,16 +26,16 @@ class UserSignup extends StatelessWidget {
         ),
       ),
       backgroundColor: Color(0xff0C3B2E),
-      body: ListView(
-        // crossAxisAlignment: CrossAxisAlignment.center,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            height: res.height(0.25),
+            height: res.width(0.45),
             child: Image.asset('assets/logo.png'),
           ),
           Expanded(
             child: Container(
-              height: MediaQuery.of(context).size.height - res.height(0.3),
+
               color: const Color(0xffF9FBFA),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),

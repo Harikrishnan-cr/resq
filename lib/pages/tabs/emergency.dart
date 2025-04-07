@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:resq/services/controllers/user_controller.dart';
+import 'package:resq/services/location_serice.dart';
 import 'package:resq/utils/utils.dart';
 
 class EmergencyPage extends StatelessWidget {
@@ -130,7 +131,10 @@ class EmergencyPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             InkWell(
-              onTap: controller.saveUserDetails,
+              onTap: () async{
+                final location = await getCurrentLatLong();
+                controller.saveUserDetails(latlong: location);
+              },
               child: Container(
                 width: res.width(0.4),
                 height: res.width(0.12),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:resq/services/controllers/auth_controller.dart';
 import 'package:resq/services/controllers/home_controller.dart';
 import 'package:resq/services/controllers/user_controller.dart';
+import 'package:resq/services/location_serice.dart';
 import 'package:resq/utils/utils.dart';
 import 'package:resq/widgets/textfeild.dart';
 
@@ -131,12 +132,13 @@ class HomePage extends StatelessWidget {
                       height: res.width(0.04),
                     ),
                     InkWell(
-                      onTap: () {
+                      onTap: ()async {
                         controller.name.value = nameController.text;
                         controller.location.value = locationController.text;
                         controller.note.value = noteController.text;
+                        final location = await getCurrentLatLong();
                         controller.saveUserDetails(
-                          latlong: homecontroller.latlong.string,
+                          latlong: location,
                           // latlong: homecontroller.currentPosition
                         );
                       },
